@@ -1,10 +1,12 @@
-import { Button } from "@/components/ui/button";
-import React from "react";
+import ProductList from "@/components/shared/product/product-list";
+import { getLatestProducts } from "@/lib/actions/product.action";
 
 const page = async () => {
+  const latestProducts = await getLatestProducts();
+
   return (
     <>
-      <Button>Work Hard</Button>
+      <ProductList data={latestProducts} title="Newest Arrivals" limit={4} />
     </>
   );
 };
