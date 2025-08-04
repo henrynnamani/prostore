@@ -38,8 +38,8 @@ model User {
   email         String    @unique(map: "user_email_idx")
   password      String?
   role          String    @default("user")
-  emailVerified DateTime  @db.Timestamp(6)
-  image         String
+  emailVerified DateTime? @db.Timestamp(6)
+  image         String?
   address       Json?     @db.Json
   paymentMethod String?
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
@@ -79,5 +79,6 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
+
   @@id([identifier, token])
 }

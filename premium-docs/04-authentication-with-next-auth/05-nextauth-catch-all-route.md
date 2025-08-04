@@ -14,7 +14,7 @@ export const { GET, POST } = handlers;
 ```
 
 In many projects, you will see all the stuff we added to the `auth.js` file directly in the `[...nextauth].ts` file. You could do that, but we are just exporting the handlers from the `auth.js` file. Either way, whenever a request is made to `/api/auth/*` it will be handled by Next Auth.
-
+  
 There isn't a great way to test this yet because we have not created the sign in page yet. You could do the following for now:
 
 - Go to the `/api/auth/signin` route in your browser. You should get a redirect to the callback URL
