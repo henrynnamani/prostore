@@ -43,7 +43,19 @@ import { CartItem } from '@/types';
 
 const AddToCart = ({ item }: { item: Omit<CartItem, 'cartId'> }) => {
   return <>Add To Cart</>;
-};
+};ort const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product is required"),
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  qty: z.number().int().nonnegative("Quantity must be a non-negative number"),
+  image: z.string().min(1, "Image is required"),
+  price: z
+    .number()
+    .refine(
+      (value) => /^\d+(\.\d{2})?$/.test(Number(value).toFixed(2)),
+      "Price must have exactly two decimal places (e.g., 49.99)"
+    ),
+});
 
 export default AddToCart;
 ```
