@@ -4,6 +4,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
@@ -55,9 +57,7 @@ export const config = {
   ],
   callbacks: {
     async session({ session, user, trigger, token }: any) {
-      // session.user.id = token.sub;
-
-      session.user.id = token.id;
+      session.user.id = token.sub;
       session.user.name = token.name; // 👈 Add this line
       session.user.role = token.role;
 
@@ -91,7 +91,29 @@ export const config = {
 
       return token;
     },
+    authorized({ request, auth }: any) {
+      // if there's no sessionCartID
+      if (!request.cookies.get("sessionCartId")) {
+        const sessionCartId = crypto.randomUUID();
+
+        const newRequestHeaders = new Headers(request.headers);
+
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        response.cookies.set("sessionCartId", sessionCartId);
+
+        return response;
+      } else {
+        return true;
+      }
+    },
   },
 } satisfies NextAuthConfig;
 
 export const { handlers, signIn, auth, signOut } = NextAuth(config);
+
+export { auth as middleware } from "@/auth";
